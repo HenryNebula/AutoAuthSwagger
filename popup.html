@@ -1,33 +1,20 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel="stylesheet" href="base.css">
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto">
-    <link rel="stylesheet" href="options.css">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.css"/>
-    <script src="jquery/jquery-3.6.0.min.js"></script>
-    <script src="bootstrap/js/bootstrap.bundle.js" ></script>
-  </head>
-  <body>
-    <h3>
-      Auto Auth for Swagger
-    </h3>
-    <div id='inputWrapper'>
-      <label for='authInput'>Apikey:</label>
-      <input autofocus type='text' id='authInput' class="form-control">
-      <button type='button' id='authBtn' class="btn btn-primary">set auth key</button>
-    </div>
-    <div id='notSwaggerInfo' style="visibility: hidden;">
-      <p>This extension only works on swagger pages</p>
-    </div>
-    <div class='footer'>
-      <form action="https://www.paypal.com/donate" method="post" target="_blank">
-        <input type="hidden" name="hosted_button_id" value="M6PQ2STJKCWSE" />
-        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-        <img alt="" border="0" src="https://www.paypal.com/en_NO/i/scr/pixel.gif" width="1" height="1" />
-      </form>
-    </div>
-    <script src='popup.js'></script>
-  </body>
+<head>
+  <title>Auto Auth Swagger</title>
+  <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="base.css">
+  <style>
+    body {
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p>Configure the extension on the options page.</p>
+    <button id="options" class="btn btn-primary">Go to Options</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
 </html>

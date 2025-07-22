@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel="stylesheet" href="options.css">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.css"/>
-    <script src="jquery/jquery-3.6.0.min.js"></script>
-    <script src="bootstrap/js/bootstrap.bundle.js" ></script>
-  </head>
-  <body>
-    <table class="table" id='dataTable'>
+<head>
+  <title>Auto Auth Swagger Options</title>
+  <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="base.css">
+  <link rel="stylesheet" type="text/css" href="options.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Auto Auth Swagger Options</h1>
+    <table id="configs" class="table">
       <thead>
         <tr>
-          <th scope="col">Domain</th>
-          <th scope="col">API key</th>
-          <th scope="col">Delete</th>
+          <th>URL Pattern</th>
+          <th>API Key</th>
+          <th>Regex</th>
+          <th></th>
         </tr>
       </thead>
-      <tbody id='tableBody'></tbody>
+      <tbody>
+      </tbody>
     </table>
-  </body>
+    <button id="add" class="btn btn-primary">Add</button>
+    <button id="save" class="btn btn-success">Save</button>
+    <div id="status" class="alert alert-success" style="display: none;"></div>
+  </div>
+  <script src="jquery/jquery-3.6.0.min.js"></script>
   <script src="options.js"></script>
+</body>
 </html>

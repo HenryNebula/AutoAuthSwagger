@@ -1,0 +1,11 @@
+#configs .url {
+  width: 40vw;
+}
+
+#configs .apiKey {
+  width: 30vw;
+}
+
+#configs .isRegex {
+  width: 5vw;
+}
