@@ -1,53 +1,65 @@
-let isAuthenticated = false;
-let isSwaggerDocument = document.getElementById('swagger-ui') ? true : false;
-const setAuthKey = async () => {
-  let authWrapper;
-  const domain = new URL(location.href);
-  await chrome.storage.sync.get(({[domain.hostname]:  apiKey }) => {
-    if(apiKey && !isAuthenticated && isSwaggerDocument){
-      function callback(mut) {
-        
+chrome.storage.sync.get({ configs: [] }, function (items) {
+  const configs = items.configs;
+  const currentUrl = window.location.href;
 
-          let form = authWrapper?.querySelector('form');
+  console.log('AutoAuthSwagger: Checking configurations for URL:', currentUrl);
 
-          let input = form?.querySelector('input');
+  for (const config of configs) {
+    const urlPattern = config.isRegex
+      ? new RegExp(config.url)
+      : new RegExp(`^${config.url.replace(/\*/g, '.*')}$`);
 
-          let changeEvent = new Event('change', { bubbles: true });
+    if (urlPattern.test(currentUrl)) {
+      console.log('AutoAuthSwagger: Found matching pattern:', config.url);
+      const apiKey = config.apiKey;
 
-          let buttons = form?.querySelectorAll('button'); // Buttons inside the form element
+      const injectApiKey = (authWrapper) => {
+        console.log('AutoAuthSwagger: Auth wrapper found. Attempting to inject key.');
+        const authButton = authWrapper.querySelector('button');
+        if (authButton) {
+          authButton.click(); // Open the authorization modal
 
-          
-          if(input) {
-            input.value = apiKey;
+          // Observe the modal for the input field to appear
+          const modalObserver = new MutationObserver((mutationsList, observer) => {
+            const form = authWrapper.querySelector('form');
+            if (form) {
+              const input = form.querySelector('input');
+              if (input) {
+                console.log('AutoAuthSwagger: Injecting API Key.');
+                const changeEvent = new Event('change', { bubbles: true });
+                const buttons = form.querySelectorAll('button');
 
-            input.dispatchEvent(changeEvent)
-          }
+                input.value = apiKey;
+                input.dispatchEvent(changeEvent);
 
-          
-          if(buttons) {
-            buttons[0]?.click(); // Auth button
+                if (buttons && buttons.length > 1) {
+                  buttons[0]?.click(); // Authorize button
+                  buttons[1]?.click(); // Close button
+                  console.log('AutoAuthSwagger: Authorization submitted.');
+                }
+                observer.disconnect(); // Stop observing the modal
+              }
+            }
+          });
 
-            buttons[1]?.click();	// close button
-          }
-          isAuthenticated = true;
-      }
-      setTimeout(() => {
+          modalObserver.observe(authWrapper, { childList: true, subtree: true });
+        }
+      };
 
-        authWrapper = document.querySelector('.auth-wrapper')
+      // Observe the document for the main swagger-ui and auth-wrapper to appear
+      const pageObserver = new MutationObserver((mutationsList, observer) => {
+        const swaggerUI = document.getElementById('swagger-ui');
+        const authWrapper = document.querySelector('.auth-wrapper');
+        if (swaggerUI && authWrapper) {
+          console.log('AutoAuthSwagger: Swagger UI and auth wrapper detected.');
+          injectApiKey(authWrapper);
+          observer.disconnect(); // Stop observing the page
+        }
+      });
 
-        
+      pageObserver.observe(document.body, { childList: true, subtree: true });
 
-        let observer = new MutationObserver(callback)
-
-        observer.observe(authWrapper, {childList: true})
-
-        authWrapper.querySelector('button').click()
-
-      }, 500)
+      break; // Stop after finding the first matching config
     }
-  })
-}
-  
-if(!isAuthenticated) {
-  setAuthKey();
-}
+  }
+});
